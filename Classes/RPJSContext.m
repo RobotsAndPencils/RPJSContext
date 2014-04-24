@@ -49,7 +49,7 @@
         self[@"require"] = ^JSValue *(NSString *moduleName) {
             NSLog(@"require: %@", moduleName);
             JSContext *context = [RPJSContext currentContext];
-            NSString *modulePath = [[NSBundle mainBundle] pathForResource:moduleName ofType:@"js"];
+            NSString *modulePath = [[NSBundle bundleForClass:[self class]] pathForResource:moduleName ofType:@"js"];
             NSData *moduleFileData = [NSData dataWithContentsOfFile:modulePath];
             NSString *moduleStringContents = [[NSString alloc] initWithData:moduleFileData encoding:NSUTF8StringEncoding];
             if (!moduleStringContents || [moduleStringContents length] == 0) {
@@ -90,17 +90,18 @@
 
 #pragma mark - Public
 
-- (void)evaluateScript:(NSString *)script withInstanceName:(NSString *)instanceName {
+- (JSValue *)evaluateScript:(NSString *)script withInstanceName:(NSString *)instanceName {
     NSString *wrappedScript = [NSString stringWithFormat:@"(function() { %@ }).call(%@);", script, instanceName];
-    [self evaluateScript:wrappedScript];
+    return [self evaluateScript:wrappedScript];
 }
 
-- (void)evaluateScriptFileWithName:(NSString *)name {
-    NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@"js"];
+- (JSValue *)evaluateScriptFileWithName:(NSString *)name {
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"js"];
     NSString *scriptContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (scriptContents) {
-        [self evaluateScript:scriptContents];
+        return [self evaluateScript:scriptContents];
     }
+    return nil;
 }
 
 - (void)requireModules:(NSArray *)modules {

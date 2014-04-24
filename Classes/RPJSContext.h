@@ -16,12 +16,12 @@ typedef void(^RPJSContextLogHandler)(NSString *);
 @property (nonatomic, copy) RPJSContextExceptionHandler customExceptionHandler;
 @property (nonatomic, copy) RPJSContextLogHandler logHandler;
 
-- (void)evaluateScript:(NSString *)script withInstanceName:(NSString *)instanceName;
-- (void)evaluateScriptFileWithName:(NSString *)name;
+- (JSValue *)evaluateScript:(NSString *)script withInstanceName:(NSString *)instanceName;
+- (JSValue *)evaluateScriptFileWithName:(NSString *)name;
 
 - (void)requireModules:(NSArray *)modules;
 
-- (void)triggerEventWithName:(NSString* )eventName;
+- (void)triggerEventWithName:(NSString *)eventName;
 - (void)triggerEventWithName:(NSString *)eventName arguments:(NSArray *)arguments;
 
 @end

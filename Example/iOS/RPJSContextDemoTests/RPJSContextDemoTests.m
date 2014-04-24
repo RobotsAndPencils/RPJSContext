@@ -6,29 +6,98 @@
 //  Copyright (c) 2014 Robots and Pencils. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
+#import <Specta/Specta.h>
+#define EXP_SHORTHAND
+#import <Expecta/Expecta.h>
 
-@interface RPJSContextDemoTests : XCTestCase
+#import <JavaScriptCore/JavaScriptCore.h>
 
-@end
+#import "RPJSContext.h"
 
-@implementation RPJSContextDemoTests
+SpecBegin(RPJSContext)
 
-- (void)setUp
-{
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
+describe(@"RPJSContext", ^{
+    __block RPJSContext *context;
+    
+    beforeEach(^{
+        context = [[RPJSContext alloc] init];
+    });
+    
+    it(@"should initialize", ^{
+        expect(context).notTo.beNil();
+    });
+    
+    it(@"should evaluate a JS script string bound to a variable", ^{
+        // Workaround for JSC date bug where seconds aren't converted to milliseconds
+        NSDate *testDate = [NSDate dateWithTimeIntervalSince1970:[[NSDate date] timeIntervalSince1970] * 1000];
+        
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+        NSString *year = [NSString stringWithFormat:@"%ld", (long)[components year]];
+        
+        [context evaluateScript:@"var year;"];
+        NSString *script = @"year = this.getFullYear();";
 
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
+        context[@"testDate"] = testDate;
+        [context evaluateScript:script withInstanceName:@"testDate"];
+        JSValue *yearValue = context[@"year"];
+        
+        expect(yearValue).notTo.beNil();
+        expect([yearValue isUndefined]).notTo.equal(YES);
+        expect([yearValue toString]).to.equal(year);
+    });
+    
+    it(@"should evaluate a JS script file", ^{
+        JSValue *result = [context evaluateScriptFileWithName:@"BasicJavaScript"];
+        
+        expect(result).notTo.beNil();
+        expect([result isUndefined]).notTo.equal(YES);
+        expect([result[@"testString"] toString]).to.equal(@"Some text.");
+        expect([result[@"sum"] toNumber]).to.equal(@8);
+    });
+    
+    it(@"should trigger an event", ^{
+        NSString *eventHandler = @"var result; Event.on('GotchaEvent', function() { result = 'gotcha!'; });";
+        [context evaluateScript:eventHandler];
+        
+        [context triggerEventWithName:@"GotchaEvent"];
 
-- (void)testExample
-{
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
-}
+        JSValue *result = context[@"result"];
+        expect(result).notTo.beNil();
+        expect([result isUndefined]).notTo.equal(YES);
+        expect([result toString]).to.equal(@"gotcha!");
+    });
+    
+    it(@"should trigger an event with arguments", ^{
+        NSString *eventHandler = @"var result; Event.on('GotchaEvent', function(message) { result = message; });";
+        [context evaluateScript:eventHandler];
+        
+        [context triggerEventWithName:@"GotchaEvent" arguments:@[ @"'gotcha!'" ]];
+        
+        JSValue *result = context[@"result"];
+        expect(result).notTo.beNil();
+        expect([result isUndefined]).notTo.equal(YES);
+        expect([result toString]).to.equal(@"gotcha!");
+    });
+    
+    it(@"should require a JS module", ^{
+        [context requireModules:@[ @"TestModule" ]];
+        JSValue *testModule = context[@"TestModule"];
+        
+        JSValue *sum = [testModule[@"add"] callWithArguments:@[ @1, @2 ]];
+        expect([sum toNumber]).to.equal(@3);
+        
+        JSValue *one = testModule[@"one"];
+        expect([one toNumber]).to.equal(@1);
+    });
+    
+    it(@"should require an exported native class as a module", ^{
+        [context requireModules:@[ @"NSUUID" ]];
+        
+        JSValue *UUIDStringValue = [context evaluateScript:@"NSUUID.UUID().UUIDString();"];
+        expect(UUIDStringValue).notTo.beNil();
+        expect([UUIDStringValue isUndefined]).notTo.equal(YES);
+        expect([[UUIDStringValue toString] length]).notTo.equal(0);
+    });
+});
 
-@end
+SpecEnd
