@@ -16,9 +16,13 @@ it simply add the following line to your Podfile:
 
     pod "RPJSContext"
 
-## Author
+## Contact
 
-Brandon Evans, brandon@brandonevans.ca
+<a href="http://www.robotsandpencils.com"><img src="RNPLogo.png"></a>
+
+## Maintainers
+
+- [Brandon Evans](https://www.github.com/interstateone) ([@interstateone](https://twitter.com/interstateone))
 
 ## License
 
