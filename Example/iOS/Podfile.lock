@@ -1,0 +1,41 @@
+PODS:
+  - AFNetworking (2.2.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.2.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.2.3):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.2.3)
+  - AFNetworking/Security (2.2.3)
+  - AFNetworking/Serialization (2.2.3)
+  - AFNetworking/UIKit (2.2.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Expecta (0.3.0)
+  - RPJSContext (0.1.0):
+    - AFNetworking (~> 2.2)
+  - Specta (0.2.1)
+
+DEPENDENCIES:
+  - Expecta (~> 0.3.0)
+  - RPJSContext (from `../../`)
+  - Specta (~> 0.2.1)
+
+EXTERNAL SOURCES:
+  RPJSContext:
+    :path: ../../
+
+SPEC CHECKSUMS:
+  AFNetworking: ae513199cca79e9d7af2708ccabe2ed075550c42
+  Expecta: 322f1dc42610106a5ba9871b4924cf1635d80833
+  RPJSContext: 33f9e27109fe4f26750de2db7056fa92fbd8b58e
+  Specta: 2d06220591110c6d9757d8be8ecf8e63aa40dc2a
+
+COCOAPODS: 0.32.1

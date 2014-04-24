@@ -12,10 +12,12 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.9'
   s.requires_arc = true
 
-  s.source_files = 'Classes'
+  s.source_files = 'Classes/**/*'
+  s.resources = 'Assets/JS/*.js'
 
   s.ios.exclude_files = 'Classes/osx'
   s.osx.exclude_files = 'Classes/ios'
   s.public_header_files = 'Classes/**/*.h'
   s.frameworks = 'JavaScriptCore'
+  s.dependency 'AFNetworking', '~>2.2'
 end
