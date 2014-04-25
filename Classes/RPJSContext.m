@@ -10,7 +10,6 @@
 
 // Standard Library
 #import "RPJSRequests.h"
-#import "RPJSJSON.h"
 #import "RPJSTimer.h"
 
 @interface RPJSContext ()
@@ -71,10 +70,9 @@
         [self evaluateScriptFileWithName:@"lodash"];
         [self evaluateScriptFileWithName:@"EventEmitter"];
         [self evaluateScript:@"var Event = new EventEmitter();"];
-        [self evaluateScript:@"_.extend(Object.prototype, EventEmitter.prototype)"];
+        // [self evaluateScript:@"_.extend(Object.prototype, EventEmitter.prototype)"];
         
         self[@"Request"] = [RPJSRequests class];
-        self[@"JSON"] = [RPJSJSON class];
         self.timer = [[RPJSTimer alloc] init];
         self[@"Timer"] = self.timer;
     }
