@@ -10,7 +10,6 @@
 
 // Standard Library
 #import "RPJSRequests.h"
-#import "RPJSMath.h"
 #import "RPJSJSON.h"
 #import "RPJSTimer.h"
 
@@ -75,7 +74,6 @@
         [self evaluateScript:@"_.extend(Object.prototype, EventEmitter.prototype)"];
         
         self[@"Request"] = [RPJSRequests class];
-        self[@"Math"] = [RPJSMath class];
         self[@"JSON"] = [RPJSJSON class];
         self.timer = [[RPJSTimer alloc] init];
         self[@"Timer"] = self.timer;
