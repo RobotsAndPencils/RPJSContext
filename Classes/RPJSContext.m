@@ -48,7 +48,7 @@
         self[@"require"] = ^JSValue *(NSString *moduleName) {
             NSLog(@"require: %@", moduleName);
             JSContext *context = [RPJSContext currentContext];
-            NSString *modulePath = [[NSBundle bundleForClass:[self class]] pathForResource:moduleName ofType:@"js"];
+            NSString *modulePath = [[NSBundle bundleForClass:[context class]] pathForResource:moduleName ofType:@"js"];
             NSData *moduleFileData = [NSData dataWithContentsOfFile:modulePath];
             NSString *moduleStringContents = [[NSString alloc] initWithData:moduleFileData encoding:NSUTF8StringEncoding];
             if (!moduleStringContents || [moduleStringContents length] == 0) {
