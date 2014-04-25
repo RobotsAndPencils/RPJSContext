@@ -71,14 +71,14 @@ static NSString *const RPJSContextRequestsHTML = @"html";
         [[RPJSRequests sharedManager] GET:[url absoluteString] parameters:data success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self callFunction:successCallback withResponseObject:responseObject dataType:dataType];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [errorCallback callWithArguments:@[ [error userInfo] ]];
+            [errorCallback callWithArguments:@[ [[error userInfo] description] ]];
         }];
     }
     else if ([method isEqualToString:RPJSContextRequestPOST]) {
         [[RPJSRequests sharedManager] POST:[url absoluteString] parameters:data success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self callFunction:successCallback withResponseObject:responseObject dataType:dataType];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [errorCallback callWithArguments:@[ [error userInfo] ]];
+            [errorCallback callWithArguments:@[ [[error userInfo] description] ]];
         }];
     }
 };

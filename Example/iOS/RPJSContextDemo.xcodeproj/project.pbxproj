@@ -24,6 +24,9 @@
 		CACC263C1909BF9500B6BE50 /* BasicJavaScript.js in Resources */ = {isa = PBXBuildFile; fileRef = CACC263B1909BF9500B6BE50 /* BasicJavaScript.js */; };
 		CACC264F1909CD6800B6BE50 /* TestModule.js in Resources */ = {isa = PBXBuildFile; fileRef = CACC264E1909CD6800B6BE50 /* TestModule.js */; };
 		CACC26521909CE4000B6BE50 /* NSUUID+JSExport.m in Sources */ = {isa = PBXBuildFile; fileRef = CACC26511909CE4000B6BE50 /* NSUUID+JSExport.m */; };
+		CACC2660190B051200B6BE50 /* RPJSRequestsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = CACC265F190B051100B6BE50 /* RPJSRequestsSpec.m */; };
+		CAF67C61190B19A100B2E25D /* RPJSJSONSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = CAF67C60190B19A100B2E25D /* RPJSJSONSpec.m */; };
+		CAF67C63190B1BB900B2E25D /* RPJSTimerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = CAF67C62190B1BB900B2E25D /* RPJSTimerSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +64,9 @@
 		CACC264E1909CD6800B6BE50 /* TestModule.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = TestModule.js; sourceTree = "<group>"; };
 		CACC26501909CE4000B6BE50 /* NSUUID+JSExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUUID+JSExport.h"; sourceTree = "<group>"; };
 		CACC26511909CE4000B6BE50 /* NSUUID+JSExport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUUID+JSExport.m"; sourceTree = "<group>"; };
+		CACC265F190B051100B6BE50 /* RPJSRequestsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPJSRequestsSpec.m; path = "Standard Library/RPJSRequestsSpec.m"; sourceTree = "<group>"; };
+		CAF67C60190B19A100B2E25D /* RPJSJSONSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPJSJSONSpec.m; path = "Standard Library/RPJSJSONSpec.m"; sourceTree = "<group>"; };
+		CAF67C62190B1BB900B2E25D /* RPJSTimerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPJSTimerSpec.m; path = "Standard Library/RPJSTimerSpec.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,10 +155,8 @@
 			isa = PBXGroup;
 			children = (
 				CACC26191909A8A500B6BE50 /* RPJSContextDemoTests.m */,
-				CACC263B1909BF9500B6BE50 /* BasicJavaScript.js */,
-				CACC264E1909CD6800B6BE50 /* TestModule.js */,
-				CACC26501909CE4000B6BE50 /* NSUUID+JSExport.h */,
-				CACC26511909CE4000B6BE50 /* NSUUID+JSExport.m */,
+				CACC26531909D77700B6BE50 /* Examples */,
+				CACC26541909D77D00B6BE50 /* Standard Library */,
 				CACC26141909A8A500B6BE50 /* Supporting Files */,
 			);
 			path = RPJSContextDemoTests;
@@ -165,6 +169,27 @@
 				CACC26161909A8A500B6BE50 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CACC26531909D77700B6BE50 /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				CACC263B1909BF9500B6BE50 /* BasicJavaScript.js */,
+				CACC264E1909CD6800B6BE50 /* TestModule.js */,
+				CACC26501909CE4000B6BE50 /* NSUUID+JSExport.h */,
+				CACC26511909CE4000B6BE50 /* NSUUID+JSExport.m */,
+			);
+			name = Examples;
+			sourceTree = "<group>";
+		};
+		CACC26541909D77D00B6BE50 /* Standard Library */ = {
+			isa = PBXGroup;
+			children = (
+				CACC265F190B051100B6BE50 /* RPJSRequestsSpec.m */,
+				CAF67C60190B19A100B2E25D /* RPJSJSONSpec.m */,
+				CAF67C62190B1BB900B2E25D /* RPJSTimerSpec.m */,
+			);
+			name = "Standard Library";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,6 +366,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CACC2660190B051200B6BE50 /* RPJSRequestsSpec.m in Sources */,
+				CAF67C63190B1BB900B2E25D /* RPJSTimerSpec.m in Sources */,
+				CAF67C61190B19A100B2E25D /* RPJSJSONSpec.m in Sources */,
 				CACC26521909CE4000B6BE50 /* NSUUID+JSExport.m in Sources */,
 				CACC261A1909A8A500B6BE50 /* RPJSContextDemoTests.m in Sources */,
 			);
