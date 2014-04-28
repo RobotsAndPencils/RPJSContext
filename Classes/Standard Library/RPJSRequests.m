@@ -19,12 +19,12 @@ static NSString *const RPJSContextRequestsHTML = @"html";
 
 #pragma mark - Public
 
-+ (void)GETfromURL:(NSString *)string settings:(NSDictionary *)settings success:(JSValue *)success error:(JSValue *)error {
-    [self requestToURL:[NSURL URLWithString:string] method:RPJSContextRequestGET settings:settings success:success error:error];
++ (void)GETfromURL:(NSString *)urlString settings:(NSDictionary *)settings success:(JSValue *)success error:(JSValue *)error {
+    [self requestToURL:[NSURL URLWithString:urlString] method:RPJSContextRequestGET settings:settings success:success error:error];
 }
 
-+ (void)POSTtoURL:(NSString *)string settings:(NSDictionary *)settings success:(JSValue *)success error:(JSValue *)error {
-    [self requestToURL:[NSURL URLWithString:string] method:RPJSContextRequestPOST settings:settings success:success error:error];
++ (void)POSTtoURL:(NSString *)urlString settings:(NSDictionary *)settings success:(JSValue *)success error:(JSValue *)error {
+    [self requestToURL:[NSURL URLWithString:urlString] method:RPJSContextRequestPOST settings:settings success:success error:error];
 }
 
 #pragma mark - Private
