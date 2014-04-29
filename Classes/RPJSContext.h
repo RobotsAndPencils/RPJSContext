@@ -43,9 +43,13 @@ typedef void(^RPJSContextLogHandler)(NSString *);
 - (JSValue *)evaluateScriptFileWithName:(NSString *)name;
 
 /**
- *  Require JavaScript module files in the CommonJS format. Module names should match the filename minus the file extension, e.g. DemoModule would correspond to the file DemoModule.js
+ *  Require JavaScript module files in the CommonJS format.
+ *  
+ *  This calls `var $NAME = require('$NAME');` for each module
+ *  `require` will either load the named module from the file with a matching name or assign the native class to a variable of the same name in the context, provided the module file doesn't exist
+ *  For example, `[context requireModules:@[ @"NSUUID" ]]` would set the JS variable `NSUUID` to the exported native constructor object
  *
- *  @param modules An array of module names
+ *  @param modules An array of module names. Module names should match the filename minus the file extension, e.g. DemoModule would correspond to the file DemoModule.js
  */
 - (void)requireModules:(NSArray *)modules;
 
