@@ -4,6 +4,8 @@
 [![Version](http://cocoapod-badges.herokuapp.com/v/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 
+[LoDash](https://github.com/lodash/lodash) and [EventEmitter](https://github.com/Wolfy87/EventEmitter) are also bundled for functional utility methods and better events, respectively.
+
 ## Usage
 
 To run the example project; clone the repo, and run `pod install` from the Example directory first.
