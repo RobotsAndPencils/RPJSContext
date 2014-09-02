@@ -16,18 +16,18 @@
 
 SpecBegin(RPJSContext)
 
-describe(@"RPJSContext", ^{
+spt_describe(@"RPJSContext", ^{
     __block RPJSContext *context;
     
-    beforeEach(^{
+    spt_beforeEach(^{
         context = [[RPJSContext alloc] init];
     });
     
-    it(@"should initialize", ^{
+    spt_it(@"should initialize", ^{
         expect(context).notTo.beNil();
     });
     
-    it(@"should evaluate a JS script string bound to a variable", ^{
+    spt_it(@"should evaluate a JS script string bound to a variable", ^{
         // Workaround for JSC date bug where seconds aren't converted to milliseconds
         NSDate *testDate = [NSDate dateWithTimeIntervalSince1970:[[NSDate date] timeIntervalSince1970] * 1000];
         
@@ -46,7 +46,7 @@ describe(@"RPJSContext", ^{
         expect([yearValue toString]).to.equal(year);
     });
     
-    it(@"should evaluate a JS script file", ^{
+    spt_it(@"should evaluate a JS script file", ^{
         JSValue *result = [context evaluateScriptFileWithName:@"BasicJavaScript"];
         
         expect(result).notTo.beNil();
@@ -55,7 +55,7 @@ describe(@"RPJSContext", ^{
         expect([result[@"sum"] toNumber]).to.equal(@8);
     });
     
-    it(@"should trigger an event", ^{
+    spt_it(@"should trigger an event", ^{
         NSString *eventHandler = @"var result; Event.on('GotchaEvent', function() { result = 'gotcha!'; });";
         [context evaluateScript:eventHandler];
         
@@ -67,7 +67,7 @@ describe(@"RPJSContext", ^{
         expect([result toString]).to.equal(@"gotcha!");
     });
     
-    it(@"should trigger an event with arguments", ^{
+    spt_it(@"should trigger an event with arguments", ^{
         NSString *eventHandler = @"var result; Event.on('GotchaEvent', function(message) { result = message; });";
         [context evaluateScript:eventHandler];
         
@@ -79,7 +79,7 @@ describe(@"RPJSContext", ^{
         expect([result toString]).to.equal(@"gotcha!");
     });
     
-    it(@"should require a JS module", ^{
+    spt_it(@"should require a JS module", ^{
         [context requireModules:@[ @"TestModule" ]];
         JSValue *testModule = context[@"TestModule"];
         
@@ -90,7 +90,7 @@ describe(@"RPJSContext", ^{
         expect([one toNumber]).to.equal(@1);
     });
     
-    it(@"should require an exported native class as a module", ^{
+    spt_it(@"should require an exported native class as a module", ^{
         [context requireModules:@[ @"NSUUID" ]];
         
         JSValue *UUIDStringValue = [context evaluateScript:@"NSUUID.UUID().UUIDString();"];

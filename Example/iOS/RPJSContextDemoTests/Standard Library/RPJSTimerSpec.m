@@ -16,37 +16,43 @@
 
 SpecBegin(RPJSTimer)
 
-describe(@"RPJSTimer", ^{
+spt_describe(@"RPJSTimer", ^{
     __block RPJSContext *context;
     
-    beforeEach(^{
+    spt_beforeEach(^{
         context = [[RPJSContext alloc] init];
     });
     
-    it(@"should call a function after 1.0s", ^AsyncBlock{
-        context[@"test"] = ^{
-            done();
-        };
-        [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0);"];
+    spt_it(@"should call a function after 1.0s", ^{
+        spt_waitUntil(^(DoneCallback done) {
+            context[@"test"] = ^{
+                done();
+            };
+            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0);"];
+        });
     });
     
-    it(@"should repeat", ^AsyncBlock {
-        __block NSInteger repeatCount = 0;
-        context[@"test"] = ^{
-            repeatCount += 1;
-            
-            // Can't go on forever...
-            if (repeatCount == 5) done();
-        };
-        [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0, true);"];
+    spt_it(@"should repeat", ^{
+        spt_waitUntil(^(DoneCallback done) {
+            __block NSInteger repeatCount = 0;
+            context[@"test"] = ^{
+                repeatCount += 1;
+
+                // Can't go on forever...
+                if (repeatCount == 5) done();
+            };
+            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0, true);"];
+        });
     });
     
-    it(@"should pass arguments", ^AsyncBlock{
-        context[@"test"] = ^(JSValue *message){
-            expect([message toString]).to.equal(@"passed");
-            done();
-        };
-        [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function(message) { test(message); }, 1.0, false, ['passed']);"];
+    spt_it(@"should pass arguments", ^{
+        spt_waitUntil(^(DoneCallback done) {
+            context[@"test"] = ^(JSValue *message){
+                expect([message toString]).to.equal(@"passed");
+                done();
+            };
+            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function(message) { test(message); }, 1.0, false, ['passed']);"];
+        });
     });
 });
 
