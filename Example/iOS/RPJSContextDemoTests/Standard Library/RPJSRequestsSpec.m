@@ -70,7 +70,7 @@ describe(@"RPJSRequests", ^{
             done();
         };
         
-        NSString *downloadScript = @"var result; var error; Request.post('http://md5.jsontest.com/', { data: { 'text': 'example text' } }, function(response) { result = response; test(result); }, function(error) { error = error; fail(error); });";
+        NSString *downloadScript = @"var result; var error; Request.post('http://httpbin.org/post', { data: { 'text': 'example text' } }, function(response) { result = response; test(result); }, function(error) { fail(error); });";
         [context evaluateScript:downloadScript];
     });
 });
