@@ -29,7 +29,7 @@ spt_describe(@"RPJSContext", ^{
     
     spt_it(@"should evaluate a JS script string bound to a variable", ^{
         // Workaround for JSC date bug where seconds aren't converted to milliseconds
-        NSDate *testDate = [NSDate dateWithTimeIntervalSince1970:[[NSDate date] timeIntervalSince1970] * 1000];
+        NSDate *testDate = [NSDate date];
         
         NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
         NSString *year = [NSString stringWithFormat:@"%ld", (long)[components year]];
