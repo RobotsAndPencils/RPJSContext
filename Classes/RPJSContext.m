@@ -70,8 +70,8 @@
         [self evaluateScriptFileWithName:@"lodash"];
         [self evaluateScriptFileWithName:@"EventEmitter"];
         [self evaluateScript:@"var Event = new EventEmitter();"];
-        // [self evaluateScript:@"_.extend(Object.prototype, EventEmitter.prototype)"];
-        
+        [self evaluateScript:@"_.extendNonEnumerable(Object.prototype, EventEmitter.prototype)"];
+
         self[@"Request"] = [RPJSRequests class];
         self.timer = [[RPJSTimer alloc] init];
         self[@"Timer"] = self.timer;

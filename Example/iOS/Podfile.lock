@@ -1,21 +1,23 @@
 PODS:
-  - AFNetworking (2.2.3):
+  - AFNetworking (2.3.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.3):
+  - AFNetworking/NSURLConnection (2.3.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.3):
-    - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.3)
-  - AFNetworking/Security (2.2.3)
-  - AFNetworking/Serialization (2.2.3)
-  - AFNetworking/UIKit (2.2.3):
+  - AFNetworking/NSURLSession (2.3.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.3.1)
+  - AFNetworking/Security (2.3.1)
+  - AFNetworking/Serialization (2.3.1)
+  - AFNetworking/UIKit (2.3.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Expecta (0.3.0)
@@ -26,16 +28,19 @@ PODS:
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - RPJSContext (from `../../`)
-  - Specta (~> 0.2.1)
+  - Specta (from `git@github.com:specta/specta.git`, branch `0.3-wip`)
 
 EXTERNAL SOURCES:
   RPJSContext:
     :path: ../../
+  Specta:
+    :branch: 0.3-wip
+    :git: git@github.com:specta/specta.git
 
 SPEC CHECKSUMS:
-  AFNetworking: ae513199cca79e9d7af2708ccabe2ed075550c42
-  Expecta: 322f1dc42610106a5ba9871b4924cf1635d80833
+  AFNetworking: 6d7b76aa5d04c8c37daad3eef4b7e3f2a7620da3
+  Expecta: ce8a51b9fad15a2cd573b291cb2909aaed865350
   RPJSContext: 33f9e27109fe4f26750de2db7056fa92fbd8b58e
-  Specta: 2d06220591110c6d9757d8be8ecf8e63aa40dc2a
+  Specta: 4d6fcee3363df686cc04de4666e18a3d43d8e8b0
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.1

@@ -14,7 +14,7 @@ To run the example project; clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-RPJSContext requires at least iOS 7.0 and OS X 10.9.
+RPJSContext requires at least iOS 8.0 and OS X 10.10.
 
 ## Installation
 
