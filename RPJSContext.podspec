@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage         = "http://github.com/RobotsAndPencils/RPJSContext"
   s.license          = 'MIT'
   s.author           = { "Brandon Evans" => "brandon.evans@robotsandpencils.com" }
-  s.source           = { :git => "http://EXAMPLE/NAME.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/RobotsAndPencils/RPJSContext.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/RobotsNPencils'
 
   s.ios.deployment_target = '7.0'
