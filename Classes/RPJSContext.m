@@ -91,13 +91,17 @@
     return [self evaluateScript:wrappedScript];
 }
 
-- (JSValue *)evaluateScriptFileWithName:(NSString *)name {
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"js"];
+- (JSValue *)evaluateScriptFileAtPath:(NSString *)path {
     NSString *scriptContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (scriptContents) {
-        return [self evaluateScript:scriptContents];
+        return [self evaluateScript:scriptContents withSourceURL:[NSURL URLWithString:path]];
     }
     return nil;
+}
+
+- (JSValue *)evaluateScriptFileWithName:(NSString *)name {
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"js"];
+    return [self evaluateScriptFileAtPath:path];
 }
 
 - (void)requireModules:(NSArray *)modules {

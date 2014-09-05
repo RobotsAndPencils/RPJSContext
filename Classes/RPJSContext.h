@@ -36,6 +36,15 @@ typedef void(^RPJSContextLogHandler)(NSString *);
 /**
  *  Evaluate a JavaScript file
  *
+ *  @param path The path of the file to evaluate
+ *
+ *  @return The return value of the evaluated file
+ */
+- (JSValue *)evaluateScriptFileAtPath:(NSString *)path;
+
+/**
+ *  Evaluate a JavaScript file
+ *
  *  @param name The name of the file contained in the same bundle as this class
  *
  *  @return The JSValue returned from the script
