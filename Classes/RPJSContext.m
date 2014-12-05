@@ -90,20 +90,15 @@
 
         // Core Modules
         [RPJSRequest setupInContext:self];
-
-        [self evaluateScriptFileWithName:@"lodash"];
-        [self evaluateScriptFileWithName:@"EventEmitter"];
-        [self evaluateScript:@"var Event = new EventEmitter();"];
-        [self evaluateScript:@"_.extendNonEnumerable(Object.prototype, EventEmitter.prototype)"];
     }
     return self;
 }
 
 #pragma mark - Public
 
-- (JSValue *)evaluateScript:(NSString *)script withInstanceName:(NSString *)instanceName {
-    NSString *wrappedScript = [NSString stringWithFormat:@"(function() { %@ }).call(%@);", script, instanceName];
-    return [self evaluateScript:wrappedScript];
+- (JSValue *)evaluateScriptFileWithName:(NSString *)name {
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"js"];
+    return [self evaluateScriptFileAtPath:path];
 }
 
 - (JSValue *)evaluateScriptFileAtPath:(NSString *)path {
@@ -114,35 +109,24 @@
     return nil;
 }
 
-- (JSValue *)evaluateScriptFileWithName:(NSString *)name {
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"js"];
-    return [self evaluateScriptFileAtPath:path];
-}
-
 - (void)requireModules:(NSArray *)modules {
     for (NSString *moduleName in modules) {
         [self evaluateScript:[NSString stringWithFormat:@"var %@ = require('%@');", moduleName, moduleName]];
     }
 }
 
-- (void)triggerEventWithName:(NSString* )eventName {
-    [self triggerEventWithName:eventName arguments:@[]];
-}
+#pragma mark - Private
 
-- (void)triggerEventWithName:(NSString *)eventName arguments:(NSArray *)arguments {
-    NSLog(@"Triggering '%@'", eventName);
-    if (!arguments) {
-        arguments = @[];
-    }
-    
-    NSMutableString *argumentsString = [@"[" mutableCopy];
-    for (NSString *argument in arguments) {
-        [argumentsString appendString:argument];
-        [argumentsString appendString:@","];
-    }
-    [argumentsString appendString:@"]"];
-    
-    [self evaluateScript:[NSString stringWithFormat:@"Event.trigger('%@', %@);", eventName, argumentsString]];
+- (NSString *)shimGeneratorScript:(NSString *)generatorScript {
+    NSString *preparedGeneratorScript = [generatorScript copy];
+    // Escape whitespace since this is being interpolated into another script
+    preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
+    preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];
+    preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    NSString *compile = [NSString stringWithFormat:@"regenerator.compile('%@').code;", preparedGeneratorScript];
+    NSString *shimmedScript = [[self evaluateScript:compile] toString];
+    return shimmedScript;
 }
 
 @end

@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Classes/**/*'
-  s.resources = 'Assets/JS/*.js'
+  s.resources = 'Assets/JS/**/*.js'
 
   s.ios.exclude_files = 'Classes/osx'
   s.osx.exclude_files = 'Classes/ios'
