@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Robots and Pencils. All rights reserved.
 //
 
+@import JavaScriptCore;
+
 #import <Specta/Specta.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
-
-#import <JavaScriptCore/JavaScriptCore.h>
 
 #import "RPJSContext.h"
 
 SpecBegin(RPJSTimer)
 
-spt_describe(@"RPJSTimer", ^{
+spt_describe(@"RPJSTimers", ^{
     __block RPJSContext *context;
     
     spt_beforeEach(^{
