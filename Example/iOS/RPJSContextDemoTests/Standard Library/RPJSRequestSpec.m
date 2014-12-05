@@ -1,26 +1,27 @@
 //
-//  RPJSRequestsSpec.m
+//  RPJSRequestSpec.m
 //  RPJSContextDemo
 //
 //  Created by Brandon Evans on 2014-04-25.
 //  Copyright (c) 2014 Robots and Pencils. All rights reserved.
 //
 
+@import JavaScriptCore;
+
 #import <Specta/Specta.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
 
-#import <JavaScriptCore/JavaScriptCore.h>
-
 #import "RPJSContext.h"
 
-SpecBegin(RPJSRequests)
+SpecBegin(RPJSRequest)
 
-spt_describe(@"RPJSRequests", ^{
+spt_describe(@"RPJSRequest", ^{
     __block RPJSContext *context;
     
     spt_beforeEach(^{
         context = [[RPJSContext alloc] init];
+        [context evaluateScript:@"var request = require('request');"];
     });
     
     spt_it(@"should GET JSON", ^{
@@ -37,7 +38,7 @@ spt_describe(@"RPJSRequests", ^{
                 done();
             };
 
-            NSString *downloadScript = @"var result; var error; Request.get('http://api.openweathermap.org/data/2.5/weather?q=Calgary,AB', {}, function(response) { result = response; test(result); }, function(error) { error = error; fail(error); });";
+            NSString *downloadScript = @"request.get('http://api.openweathermap.org/data/2.5/weather?q=Calgary,AB').then(function(response) { var json = JSON.parse(response); console.log(json); test(json); }, function(error) { fail(error); });";
             [context evaluateScript:downloadScript];
         });
     });
@@ -56,7 +57,7 @@ spt_describe(@"RPJSRequests", ^{
                 done();
             };
 
-            NSString *downloadScript = @"var result; var error; Request.get('http://www.apple.com', { dataType: 'html' }, function(response) { result = response; test(result); }, function(error) { error = error; fail(error); });";
+            NSString *downloadScript = @"request.get('http://www.apple.com').then(function(response) { test(response); }, function(error) { fail(error); });";
             [context evaluateScript:downloadScript];
         });
     });
@@ -75,7 +76,7 @@ spt_describe(@"RPJSRequests", ^{
                 done();
             };
 
-            NSString *downloadScript = @"var result; var error; Request.post('http://httpbin.org/post', { data: { 'text': 'example text' } }, function(response) { result = response; test(result); }, function(error) { fail(error); });";
+            NSString *downloadScript = @"request.post('http://httpbin.org/post', { 'text': 'example text' }).then(function(response) { test(response); }, function(error) { fail(error); });";
             [context evaluateScript:downloadScript];
         });
     });

@@ -9,7 +9,7 @@
 #import "RPJSContext.h"
 
 // Standard Library
-#import "RPJSRequests.h"
+#import "RPJSRequest.h"
 
 @implementation RPJSContext
 
@@ -81,14 +81,20 @@
         self[@"createInstanceOfClass"] = ^id(NSString *className){
             return [[NSClassFromString(className) alloc] init];
         };
-        
-        // Standard library
+
+        // Backports
+        [self evaluateScriptFileWithName:@"rsvp"];
+        [self evaluateScript:@"Promise = RSVP.Promise;"];
+        [self evaluateScriptFileWithName:@"regenerator"];
+        [self evaluateScript:@"regenerator.runtime();"];
+
+        // Core Modules
+        [RPJSRequest setupInContext:self];
+
         [self evaluateScriptFileWithName:@"lodash"];
         [self evaluateScriptFileWithName:@"EventEmitter"];
         [self evaluateScript:@"var Event = new EventEmitter();"];
         [self evaluateScript:@"_.extendNonEnumerable(Object.prototype, EventEmitter.prototype)"];
-
-        self[@"Request"] = [RPJSRequests class];
     }
     return self;
 }

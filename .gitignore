@@ -19,4 +19,6 @@ DerivedData
 *.hmap
 *.ipa
 
+.idea
+
 Pods/
