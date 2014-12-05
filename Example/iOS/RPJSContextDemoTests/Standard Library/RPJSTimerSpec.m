@@ -28,11 +28,21 @@ spt_describe(@"RPJSTimer", ^{
             context[@"test"] = ^{
                 done();
             };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0);"];
+            [context evaluateScript:@"setTimeout(function() { test(); }, 1000);"];
         });
     });
-    
-    spt_it(@"should repeat", ^{
+
+    spt_it(@"should pass arguments", ^{
+        spt_waitUntil(^(DoneCallback done) {
+            context[@"test"] = ^(JSValue *message){
+                expect([message toString]).to.equal(@"passed");
+                done();
+            };
+            [context evaluateScript:@"setTimeout(function(message) { test(message); }, 1000, 'passed', 'second');"];
+        });
+    });
+
+    spt_pending(@"should repeat", ^{
         spt_waitUntil(^(DoneCallback done) {
             __block NSInteger repeatCount = 0;
             context[@"test"] = ^{
@@ -41,17 +51,7 @@ spt_describe(@"RPJSTimer", ^{
                 // Can't go on forever...
                 if (repeatCount == 5) done();
             };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0, true);"];
-        });
-    });
-    
-    spt_it(@"should pass arguments", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *message){
-                expect([message toString]).to.equal(@"passed");
-                done();
-            };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function(message) { test(message); }, 1.0, false, ['passed']);"];
+            [context evaluateScript:@"setInterval(function() { test(); }, 1000);"];
         });
     });
 });

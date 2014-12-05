@@ -10,13 +10,6 @@
 
 // Standard Library
 #import "RPJSRequests.h"
-#import "RPJSTimer.h"
-
-@interface RPJSContext ()
-
-@property (strong, nonatomic) RPJSTimer *timer;
-
-@end
 
 @implementation RPJSContext
 
@@ -51,6 +44,14 @@
 
         // For scripts that reference globals through the window object
         self[@"window"] = self.globalObject;
+
+        // Variadic blocks don't expose their variadic argument to JS, so use a wrapper JS function to handle setTimeout arguments
+        self[@"__setTimeout"] = ^(JSValue* function, JSValue* timeout, NSArray *arguments) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([timeout toInt32] * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+                [function callWithArguments:arguments];
+            });
+        };
+        [self evaluateScript:@"function setTimeout(func, delay) { var args = Array.prototype.slice.call(arguments, 2); __setTimeout(func, delay, args); };"];
         
         // Basic CommonJS module require implementation (http://wiki.commonjs.org/wiki/Modules/1.1)
         self[@"require"] = ^JSValue *(NSString *moduleName) {
@@ -71,7 +72,7 @@
             NSString *exportScript = [NSString stringWithFormat:@"(function() { var module = { exports: {}}; var exports = module.exports; %@; return module.exports; })();", moduleStringContents];
             return [context evaluateScript:exportScript];
         };
-        
+
         self[@"nativeClassWithName"] = ^JSValue *(NSString *className) {
             return [JSValue valueWithObject:NSClassFromString(className) inContext:[JSContext currentContext]];
         };
@@ -88,15 +89,8 @@
         [self evaluateScript:@"_.extendNonEnumerable(Object.prototype, EventEmitter.prototype)"];
 
         self[@"Request"] = [RPJSRequests class];
-        self.timer = [[RPJSTimer alloc] init];
-        self[@"Timer"] = self.timer;
     }
     return self;
-}
-
-- (void)dealloc {
-    [(RPJSTimer *)self.timer invalidateAllTimers];
-    self.timer = nil;
 }
 
 #pragma mark - Public
