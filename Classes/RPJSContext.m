@@ -23,18 +23,19 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
+
         __weak __typeof(self) weakSelf = self;
         self.exceptionHandler = ^(JSContext *context, JSValue *exception) {
             if (weakSelf.customExceptionHandler) {
                 weakSelf.customExceptionHandler(context, exception);
                 return;
             }
-            
-            NSLog(@"JS Exception: %@", exception);
+
+            NSLog(@"[%@:%@:%@] %@\n%@", exception[@"sourceURL"], exception[@"line"], exception[@"column"], exception, [exception[@"stack"] toObject]);
         };
-        
-        self[@"log"] = ^(NSString *message) {
+
+        // Replicate some browser/Node APIs
+        void(^log)(NSString *) = ^(NSString *message) {
             if (weakSelf.logHandler) {
                 weakSelf.logHandler(message);
                 return;
@@ -42,18 +43,32 @@
             
             NSLog(@"JS: %@", message);
         };
+        self[@"console"] = @{
+                                @"log": log,
+                                @"warn": log,
+                                @"info": log
+                            };
+
+        // For scripts that reference globals through the window object
+        self[@"window"] = self.globalObject;
         
-        // Basic CommonJS module require implementation ( http://wiki.commonjs.org/wiki/Modules/1.1 )
+        // Basic CommonJS module require implementation (http://wiki.commonjs.org/wiki/Modules/1.1)
         self[@"require"] = ^JSValue *(NSString *moduleName) {
             NSLog(@"require: %@", moduleName);
+
+            // Avoid a retain cycle
             JSContext *context = [RPJSContext currentContext];
+
             NSString *modulePath = [[NSBundle bundleForClass:[context class]] pathForResource:moduleName ofType:@"js"];
             NSData *moduleFileData = [NSData dataWithContentsOfFile:modulePath];
             NSString *moduleStringContents = [[NSString alloc] initWithData:moduleFileData encoding:NSUTF8StringEncoding];
+
+            // Analagous to Node's require.resolve loading a core module (http://nodejs.org/api/modules.html#modules_the_module_object)
             if (!moduleStringContents || [moduleStringContents length] == 0) {
-                moduleStringContents = [NSString stringWithFormat:@"exports = nativeClassWithName('%@');", moduleName];
+                moduleStringContents = [NSString stringWithFormat:@"module.exports = nativeClassWithName('%@');", moduleName];
             }
-            NSString *exportScript = [NSString stringWithFormat:@"(function() { var module = { exports: {}}; var exports = module.exports; %@; return exports; })();", moduleStringContents];
+
+            NSString *exportScript = [NSString stringWithFormat:@"(function() { var module = { exports: {}}; var exports = module.exports; %@; return module.exports; })();", moduleStringContents];
             return [context evaluateScript:exportScript];
         };
         
