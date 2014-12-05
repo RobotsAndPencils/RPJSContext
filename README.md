@@ -4,9 +4,12 @@
 [![Version](http://cocoapod-badges.herokuapp.com/v/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 
-RPJSContext adds a bunch of functionality like a CommonJS module implementation (that supports native classes), JavaScript file evaluation and the beginnings of a standard library that you would expect in a browser environment.
+RPJSContext adds a bunch of functionality like a CommonJS module require implementation (that supports native classes), easier JavaScript file evaluation and some of the functionality you would expect in a browser or Node.js environment like:
 
-[LoDash](https://github.com/lodash/lodash) and [EventEmitter](https://github.com/Wolfy87/EventEmitter) are also bundled for functional utility methods and better events, respectively.
+- a [request-promise](https://github.com/tyabonil/request-promise)-like web request API
+- setTimeout
+- promises via [rsvp.js](https://github.com/tildeio/rsvp.js/)
+- generators via [regenerator](https://github.com/facebook/regenerator)
 
 ## Usage
 
