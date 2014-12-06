@@ -1,6 +1,6 @@
 # RPJSContext
 
-[![Build Status](https://magnum.travis-ci.com/RobotsAndPencils/RPJSContext.svg?token=TsaPYdGYanrQeXcqDg9h&branch=master)](https://magnum.travis-ci.com/RobotsAndPencils/RPJSContext)
+[![Build Status](https://travis-ci.org/RobotsAndPencils/RPJSContext.svg)](https://travis-ci.org/RobotsAndPencils/RPJSContext#)
 [![Version](http://cocoapod-badges.herokuapp.com/v/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/RPJSContext/badge.png)](http://cocoadocs.org/docsets/RPJSContext)
 
