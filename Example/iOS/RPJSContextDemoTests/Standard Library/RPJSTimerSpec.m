@@ -8,52 +8,44 @@
 
 @import JavaScriptCore;
 
-#import <Specta/Specta.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
+#import <Kiwi/Kiwi.h>
 
 #import "RPJSContext.h"
 
-SpecBegin(RPJSTimer)
+SPEC_BEGIN(RPJSTimerSpec)
 
-spt_describe(@"RPJSTimers", ^{
+describe(@"RPJSTimers", ^{
     __block RPJSContext *context;
     
-    spt_beforeEach(^{
+    beforeEach(^{
         context = [[RPJSContext alloc] init];
     });
     
-    spt_it(@"should call a function after 1.0s", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^{
-                done();
-            };
-            [context evaluateScript:@"setTimeout(function() { test(); }, 1000);"];
-        });
+    it(@"should call a function after 1.0s", ^{
+        [context evaluateScript:@"var test = false; setTimeout(function() { test = true; }, 1000);"];
+        [[expectFutureValue(theValue([context[@"test"] toBool])) shouldEventuallyBeforeTimingOutAfter(1.1)] beYes];
     });
 
-    spt_it(@"should pass arguments", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *message){
-                expect([message toString]).to.equal(@"passed");
-                done();
-            };
-            [context evaluateScript:@"setTimeout(function(message) { test(message); }, 1000, 'passed', 'second');"];
-        });
+    it(@"should pass arguments", ^{
+        __block NSString *firstArgument;
+        context[@"test"] = ^(JSValue *message){
+            firstArgument = [message toString];
+        };
+
+        [context evaluateScript:@"setTimeout(function(message) { test(message); }, 1000, 'passed', 'second');"];
+
+        [[expectFutureValue(firstArgument) shouldEventuallyBeforeTimingOutAfter(1.1)] equal:@"passed"];
     });
 
-    spt_pending(@"should repeat", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            __block NSInteger repeatCount = 0;
-            context[@"test"] = ^{
-                repeatCount += 1;
+    pending(@"should repeat", ^{
+        __block NSInteger repeatCount = 0;
+        context[@"test"] = ^{
+            repeatCount += 1;
+        };
+        [context evaluateScript:@"setInterval(function() { test(); }, 1000);"];
 
-                // Can't go on forever...
-                if (repeatCount == 5) done();
-            };
-            [context evaluateScript:@"setInterval(function() { test(); }, 1000);"];
-        });
+        [[expectFutureValue(theValue(repeatCount)) shouldEventuallyBeforeTimingOutAfter(5.0)] beGreaterThanOrEqualTo:@4];
     });
 });
 
-SpecEnd
+SPEC_END

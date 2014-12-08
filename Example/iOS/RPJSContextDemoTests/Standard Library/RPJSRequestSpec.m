@@ -8,78 +8,46 @@
 
 @import JavaScriptCore;
 
-#import <Specta/Specta.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
+#import <Kiwi/Kiwi.h>
 
 #import "RPJSContext.h"
 
-SpecBegin(RPJSRequest)
+SPEC_BEGIN(RPJSRequestSpec)
 
-spt_describe(@"RPJSRequest", ^{
+describe(@"RPJSRequest", ^{
     __block RPJSContext *context;
     
-    spt_beforeEach(^{
+    beforeEach(^{
         context = [[RPJSContext alloc] init];
         [context evaluateScript:@"var request = require('request');"];
     });
     
-    spt_it(@"should GET JSON", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *result){
-                expect(result).toNot.beNil();
-                expect([result isUndefined]).to.equal(NO);
-                expect([[[result toDictionary] allKeys] count]).to.beGreaterThan(0);
-                done();
-            };
+    it(@"should GET JSON", ^{
+        NSString *downloadScript = @"var json; request.get('http://api.openweathermap.org/data/2.5/weather?q=Calgary,AB').then(function(response) { json = JSON.parse(response); }, null);";
+        [context evaluateScript:downloadScript];
 
-            context[@"fail"] = ^(JSValue *error){
-                XCTFail(@"Error: %@", [error toString]);
-                done();
-            };
-
-            NSString *downloadScript = @"request.get('http://api.openweathermap.org/data/2.5/weather?q=Calgary,AB').then(function(response) { var json = JSON.parse(response); console.log(json); test(json); }, function(error) { fail(error); });";
-            [context evaluateScript:downloadScript];
-        });
+        [[expectFutureValue(context[@"json"]) shouldEventually] beNonNil];
+        [[expectFutureValue(theValue([context[@"json"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
+        [[expectFutureValue([[context[@"json"] toDictionary] allKeys]) shouldEventually] haveCountOfAtLeast:1];
     });
     
-    spt_it(@"should GET HTML", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *result){
-                expect(result).toNot.beNil();
-                expect([result isUndefined]).to.equal(NO);
-                expect([[result toString] length]).to.beGreaterThan(0);
-                done();
-            };
+    it(@"should GET HTML", ^{
+        NSString *downloadScript = @"var responseString; request.get('http://www.apple.com').then(function(response) { responseString = response; }, null);";
+        [context evaluateScript:downloadScript];
 
-            context[@"fail"] = ^(JSValue *error){
-                XCTFail(@"Error: %@", [error toString]);
-                done();
-            };
-
-            NSString *downloadScript = @"request.get('http://www.apple.com').then(function(response) { test(response); }, function(error) { fail(error); });";
-            [context evaluateScript:downloadScript];
-        });
+        [[expectFutureValue(context[@"responseString"]) shouldEventually] beNonNil];
+        [[expectFutureValue(theValue([context[@"responseString"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
+        [[expectFutureValue([context[@"responseString"] toString]) shouldEventually] haveLengthOfAtLeast:1];
     });
     
-    spt_it(@"should POST JSON", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *result){
-                expect(result).toNot.beNil();
-                expect([result isUndefined]).to.equal(NO);
-                expect([[result toString] length]).to.beGreaterThan(0);
-                done();
-            };
+    it(@"should POST JSON", ^{
+        NSString *downloadScript = @"var json; request.post('http://httpbin.org/post', { 'text': 'example text' }).then(function(response) { json = response; }, null);";
+        [context evaluateScript:downloadScript];
 
-            context[@"fail"] = ^(JSValue *error){
-                XCTFail(@"Error: %@", [error toString]);
-                done();
-            };
-
-            NSString *downloadScript = @"request.post('http://httpbin.org/post', { 'text': 'example text' }).then(function(response) { test(response); }, function(error) { fail(error); });";
-            [context evaluateScript:downloadScript];
-        });
+        [[expectFutureValue(context[@"json"]) shouldEventually] beNonNil];
+        [[expectFutureValue(theValue([context[@"json"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
+        [[expectFutureValue([context[@"json"] toString]) shouldEventually] haveLengthOfAtLeast:1];
     });
 });
 
-SpecEnd
+SPEC_END
