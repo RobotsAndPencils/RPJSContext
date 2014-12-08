@@ -70,11 +70,6 @@
             return [JSValue valueWithObject:NSClassFromString(className) inContext:[JSContext currentContext]];
         };
         
-        // Workaround for the JSC bug where constructors aren't properly exported yet in 7.0.x
-        self[@"createInstanceOfClass"] = ^id(NSString *className){
-            return [[NSClassFromString(className) alloc] init];
-        };
-
         // Backports
         [self evaluateScriptFileWithName:@"rsvp"];
         [self evaluateScript:@"Promise = RSVP.Promise;"];
