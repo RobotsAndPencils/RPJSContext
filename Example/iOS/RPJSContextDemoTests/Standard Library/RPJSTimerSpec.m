@@ -36,16 +36,6 @@ describe(@"RPJSTimers", ^{
 
         [[expectFutureValue(firstArgument) shouldEventuallyBeforeTimingOutAfter(1.1)] equal:@"passed"];
     });
-
-    pending(@"should repeat", ^{
-        __block NSInteger repeatCount = 0;
-        context[@"test"] = ^{
-            repeatCount += 1;
-        };
-        [context evaluateScript:@"setInterval(function() { test(); }, 1000);"];
-
-        [[expectFutureValue(theValue(repeatCount)) shouldEventuallyBeforeTimingOutAfter(5.0)] beGreaterThanOrEqualTo:@4];
-    });
 });
 
 SPEC_END
