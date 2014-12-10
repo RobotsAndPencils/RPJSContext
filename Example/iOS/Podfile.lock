@@ -1,46 +1,40 @@
 PODS:
-  - AFNetworking (2.3.1):
+  - AFNetworking (2.5.0):
+    - AFNetworking/NSURLConnection (= 2.5.0)
+    - AFNetworking/NSURLSession (= 2.5.0)
+    - AFNetworking/Reachability (= 2.5.0)
+    - AFNetworking/Security (= 2.5.0)
+    - AFNetworking/Serialization (= 2.5.0)
+    - AFNetworking/UIKit (= 2.5.0)
+  - AFNetworking/NSURLConnection (2.5.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.0)
+  - AFNetworking/Security (2.5.0)
+  - AFNetworking/Serialization (2.5.0)
+  - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.3.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.3.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.3.1)
-  - AFNetworking/Security (2.3.1)
-  - AFNetworking/Serialization (2.3.1)
-  - AFNetworking/UIKit (2.3.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-  - Expecta (0.3.0)
-  - RPJSContext (0.1.0):
+  - Kiwi (2.3.1)
+  - RPJSContext (1.1.0):
     - AFNetworking (~> 2.2)
-  - Specta (0.2.1)
 
 DEPENDENCIES:
-  - Expecta (~> 0.3.0)
+  - Kiwi
   - RPJSContext (from `../../`)
-  - Specta (from `git@github.com:specta/specta.git`, branch `0.3-wip`)
 
 EXTERNAL SOURCES:
   RPJSContext:
     :path: ../../
-  Specta:
-    :branch: 0.3-wip
-    :git: git@github.com:specta/specta.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 6d7b76aa5d04c8c37daad3eef4b7e3f2a7620da3
-  Expecta: ce8a51b9fad15a2cd573b291cb2909aaed865350
-  RPJSContext: 33f9e27109fe4f26750de2db7056fa92fbd8b58e
-  Specta: 4d6fcee3363df686cc04de4666e18a3d43d8e8b0
+  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
+  Kiwi: 73e1400209055ee9c8ba78c6012b6b642d0fb9f7
+  RPJSContext: 963c6f305ae32063c240687a954dbb49d6bc9094
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.35.0

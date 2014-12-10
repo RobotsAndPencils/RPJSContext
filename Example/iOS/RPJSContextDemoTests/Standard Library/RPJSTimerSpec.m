@@ -6,54 +6,36 @@
 //  Copyright (c) 2014 Robots and Pencils. All rights reserved.
 //
 
-#import <Specta/Specta.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
+@import JavaScriptCore;
 
-#import <JavaScriptCore/JavaScriptCore.h>
+#import <Kiwi/Kiwi.h>
 
 #import "RPJSContext.h"
 
-SpecBegin(RPJSTimer)
+SPEC_BEGIN(RPJSTimerSpec)
 
-spt_describe(@"RPJSTimer", ^{
+describe(@"RPJSTimers", ^{
     __block RPJSContext *context;
     
-    spt_beforeEach(^{
+    beforeEach(^{
         context = [[RPJSContext alloc] init];
     });
     
-    spt_it(@"should call a function after 1.0s", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^{
-                done();
-            };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0);"];
-        });
+    it(@"should call a function after 1.0s", ^{
+        [context evaluateScript:@"var test = false; setTimeout(function() { test = true; }, 1000);"];
+        [[expectFutureValue(theValue([context[@"test"] toBool])) shouldEventuallyBeforeTimingOutAfter(1.1)] beYes];
     });
-    
-    spt_it(@"should repeat", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            __block NSInteger repeatCount = 0;
-            context[@"test"] = ^{
-                repeatCount += 1;
 
-                // Can't go on forever...
-                if (repeatCount == 5) done();
-            };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function() { test(); }, 1.0, true);"];
-        });
-    });
-    
-    spt_it(@"should pass arguments", ^{
-        spt_waitUntil(^(DoneCallback done) {
-            context[@"test"] = ^(JSValue *message){
-                expect([message toString]).to.equal(@"passed");
-                done();
-            };
-            [context evaluateScript:@"Timer.evaluateFunctionWithDelay(function(message) { test(message); }, 1.0, false, ['passed']);"];
-        });
+    it(@"should pass arguments", ^{
+        __block NSString *firstArgument;
+        context[@"test"] = ^(JSValue *message){
+            firstArgument = [message toString];
+        };
+
+        [context evaluateScript:@"setTimeout(function(message) { test(message); }, 1000, 'passed', 'second');"];
+
+        [[expectFutureValue(firstArgument) shouldEventuallyBeforeTimingOutAfter(1.1)] equal:@"passed"];
     });
 });
 
-SpecEnd
+SPEC_END
