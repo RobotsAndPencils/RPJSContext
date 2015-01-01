@@ -16,4 +16,4 @@ exports.post = function(url, params) {
             reject(error);
         });
     })
-}
+};
