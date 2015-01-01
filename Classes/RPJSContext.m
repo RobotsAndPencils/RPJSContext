@@ -93,6 +93,7 @@
 - (JSValue *)evaluateScriptFileAtPath:(NSString *)path {
     NSString *scriptContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (scriptContents) {
+        scriptContents = [self shimGeneratorScript:scriptContents];
         return [self evaluateScript:scriptContents withSourceURL:[NSURL URLWithString:path]];
     }
     return nil;
@@ -107,6 +108,9 @@
 #pragma mark - Private
 
 - (NSString *)shimGeneratorScript:(NSString *)generatorScript {
+    // Return early if regenerator isn't available
+    if ([self[@"regenerator"] isUndefined]) return generatorScript;
+    
     NSString *preparedGeneratorScript = [generatorScript copy];
     // Escape whitespace since this is being interpolated into another script
     preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
