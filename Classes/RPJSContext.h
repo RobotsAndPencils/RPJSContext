@@ -33,7 +33,7 @@ typedef void(^RPJSContextLogHandler)(NSString *);
 - (JSValue *)evaluateScriptFileWithName:(NSString *)name;
 
 /**
- *  Evaluate a JavaScript file
+ *  Evaluate a JavaScript file. This method is equivalent to `-[RPJSContext evaluateScriptFileAtPath:path requiresShim:YES]`
  *
  *  @param path The path of the file to evaluate
  *
@@ -42,8 +42,19 @@ typedef void(^RPJSContextLogHandler)(NSString *);
 - (JSValue *)evaluateScriptFileAtPath:(NSString *)path;
 
 /**
+ *  Evaluate a JavaScript file
+ *
+ *  @param path The path of the file to evaluate
+ *
+ *  @param scriptRequiresShim Whether or not the script needs to be processed by regenerator. Pass in NO if the script has already been shimmed.
+ *
+ *  @return The return value of the evaluated file
+ */
+- (JSValue *)evaluateScriptFileAtPath:(NSString *)path requiresShim:(BOOL)scriptRequiresShim;
+
+/**
  *  Require JavaScript module files in the CommonJS format.
- *  
+ *
  *  This calls `var $NAME = require('$NAME');` for each module
  *  `require` will either load the named module from the file with a matching name or assign the native class to a variable of the same name in the context, provided the module file doesn't exist
  *  For example, `[context requireModules:@[ @"NSUUID" ]]` would set the JS variable `NSUUID` to the exported native constructor object

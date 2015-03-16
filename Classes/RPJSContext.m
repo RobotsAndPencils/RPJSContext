@@ -17,7 +17,6 @@
 - (id)init {
     self = [super init];
     if (self) {
-
         __weak __typeof(self) weakSelf = self;
         self.exceptionHandler = ^(JSContext *context, JSValue *exception) {
             if (weakSelf.customExceptionHandler) {
@@ -34,14 +33,14 @@
                 weakSelf.logHandler(message);
                 return;
             }
-            
+
             NSLog(@"JS: %@", message);
         };
         self[@"console"] = @{
-                                @"log": log,
-                                @"warn": log,
-                                @"info": log
-                            };
+                             @"log": log,
+                             @"warn": log,
+                             @"info": log
+                             };
 
         // For scripts that reference globals through the window object
         self[@"window"] = self.globalObject;
@@ -69,7 +68,7 @@
         self[@"nativeClassWithName"] = ^JSValue *(NSString *className) {
             return [JSValue valueWithObject:NSClassFromString(className) inContext:[JSContext currentContext]];
         };
-        
+
         // Backports
         [self evaluateScriptFileWithName:@"rsvp"];
         [self evaluateScript:@"Promise = RSVP.Promise;"];
@@ -91,9 +90,15 @@
 }
 
 - (JSValue *)evaluateScriptFileAtPath:(NSString *)path {
+    return [self evaluateScriptFileAtPath:path requiresShim:YES];
+}
+
+- (JSValue *)evaluateScriptFileAtPath:(NSString *)path requiresShim:(BOOL)scriptRequiresShim {
     NSString *scriptContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (scriptContents) {
-        scriptContents = [self shimGeneratorScript:scriptContents];
+        if (scriptRequiresShim) {
+            scriptContents = [self shimGeneratorScript:scriptContents];
+        }
         return [self evaluateScript:scriptContents withSourceURL:[NSURL URLWithString:path]];
     }
     return nil;
@@ -110,7 +115,7 @@
 - (NSString *)shimGeneratorScript:(NSString *)generatorScript {
     // Return early if regenerator isn't available
     if ([self[@"regenerator"] isUndefined]) return generatorScript;
-    
+
     NSString *preparedGeneratorScript = [generatorScript copy];
     // Escape whitespace since this is being interpolated into another script
     preparedGeneratorScript = [preparedGeneratorScript stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
