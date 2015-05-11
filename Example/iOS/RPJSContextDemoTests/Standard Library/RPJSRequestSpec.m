@@ -11,42 +11,208 @@
 #import <Kiwi/Kiwi.h>
 
 #import "RPJSContext.h"
+#import "RPJSRequest.h"
+
+@interface RPJSRequest (Tests)
++ (NSDictionary *)headersFromURLValue:(JSValue *)urlValue;
+@end
 
 SPEC_BEGIN(RPJSRequestSpec)
 
 describe(@"RPJSRequest", ^{
-    __block RPJSContext *context;
-    
-    beforeEach(^{
-        context = [[RPJSContext alloc] init];
-        [context evaluateScript:@"var request = require('request');"];
+    let(jsContext, ^id{
+        return [[RPJSContext alloc] init];
+    });
+    let(requestObject, ^id{
+        [jsContext evaluateScript:@"var request = require('request');"];
+        return jsContext[@"request"];
+    });
+    let(jsonObject, ^id{
+        return jsContext[@"JSON"];
+    });
+
+    describe(@"GET", ^{
+        let(url, ^id{
+            return @"http://httpbin.org/get";
+        });
+
+        describe(@"JSON", ^{
+            describe(@"default headers", ^{
+                it(@"should set the correct Accept header", ^{
+                    __block NSDictionary *responseJSON;
+                    void (^successBlock)(NSString *) = ^(NSString *response){
+                        responseJSON = [[jsonObject invokeMethod:@"parse" withArguments:@[ response ]] toDictionary];
+                    };
+
+                    JSValue *postPromise = [requestObject invokeMethod:@"get" withArguments:@[ url ]];
+                    [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                    [[expectFutureValue(responseJSON[@"headers"][@"Accept"]) shouldEventually] equal:@"application/json"];
+                });
+            });
+
+            describe(@"custom Accept header", ^{
+                let(customAcceptHeader, ^id{
+                    return @"text/html";
+                });
+                let(options, ^id{
+                    return @{ @"url": url, @"headers": @{ @"Accept": customAcceptHeader } };
+                });
+
+                it(@"should set the correct Accept header", ^{
+                    __block NSDictionary *responseJSON;
+                    void (^successBlock)(NSString *) = ^(NSString *response){
+                        responseJSON = [[jsonObject invokeMethod:@"parse" withArguments:@[ response ]] toDictionary];
+                    };
+
+                    JSValue *postPromise = [requestObject invokeMethod:@"get" withArguments:@[ options ]];
+                    [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                    [[expectFutureValue(responseJSON[@"headers"][@"Accept"]) shouldEventually] equal:customAcceptHeader];
+                });
+            });
+        });
+
+        describe(@"HTML", ^{
+            let(url, ^id{
+                return @"http://httpbin.org/html";
+            });
+
+            it(@"should fetch an HTML string", ^{
+                __block NSString *responseString;
+                void (^successBlock)(NSString *) = ^(NSString *response){
+                    responseString = response;
+                };
+
+                JSValue *postPromise = [requestObject invokeMethod:@"get" withArguments:@[ url ]];
+                [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                [[expectFutureValue(responseString) shouldEventually] containString:@"<html"];
+            });
+        });
     });
     
-    it(@"should GET JSON", ^{
-        NSString *downloadScript = @"var json; request.get('http://api.openweathermap.org/data/2.5/weather?q=Calgary,AB').then(function(response) { json = JSON.parse(response); }, null);";
-        [context evaluateScript:downloadScript];
+    describe(@"POST", ^{
+        let(url, ^id{
+            return @"http://httpbin.org/post";
+        });
 
-        [[expectFutureValue(context[@"json"]) shouldEventually] beNonNil];
-        [[expectFutureValue(theValue([context[@"json"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
-        [[expectFutureValue([[context[@"json"] toDictionary] allKeys]) shouldEventually] haveCountOfAtLeast:1];
+        describe(@"JSON", ^{
+            let(someJSON, ^id{
+                return @{ @"text": @"example text" };
+            });
+
+            describe(@"default headers", ^{
+                let(defaultAcceptHeader, ^id{
+                    return @"application/json";
+                });
+
+                it(@"should have the correct Accept header", ^{
+                    __block NSDictionary *responseJSON;
+                    void (^successBlock)(NSString *) = ^(NSString *response){
+                        responseJSON = [[jsContext[@"JSON"] invokeMethod:@"parse" withArguments:@[ response ]] toDictionary];
+                    };
+
+                    JSValue *postPromise = [requestObject invokeMethod:@"post" withArguments:@[ url, someJSON ]];
+                    [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                    [[expectFutureValue(responseJSON[@"headers"][@"Accept"]) shouldEventually] equal:defaultAcceptHeader];
+                });
+            });
+
+            describe(@"custom Accept header", ^{
+                let(customAcceptHeader, ^id{
+                    return @"text/html";
+                });
+                let(options, ^id{
+                    return @{ @"url": url, @"headers": @{ @"Accept": customAcceptHeader } };
+                });
+
+                it(@"should have the correct Accept header", ^{
+                    __block NSDictionary *responseJSON;
+                    void (^successBlock)(NSString *) = ^(NSString *response){
+                        responseJSON = [[jsContext[@"JSON"] invokeMethod:@"parse" withArguments:@[ response ]] toDictionary];
+                    };
+
+                    JSValue *postPromise = [requestObject invokeMethod:@"post" withArguments:@[ options, someJSON ]];
+                    [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                    [[expectFutureValue(responseJSON[@"headers"][@"Accept"]) shouldEventually] equal:customAcceptHeader];
+                });
+                it(@"should submit the correct parameters", ^{
+                    __block NSDictionary *responseJSON;
+                    void (^successBlock)(NSString *) = ^(NSString *response){
+                        responseJSON = [[jsContext[@"JSON"] invokeMethod:@"parse" withArguments:@[ response ]] toDictionary];
+                    };
+
+                    JSValue *postPromise = [requestObject invokeMethod:@"post" withArguments:@[ options, someJSON ]];
+                    [postPromise invokeMethod:@"then" withArguments:@[ successBlock ]];
+
+                    [[expectFutureValue(responseJSON[@"json"]) shouldEventually] equal:someJSON];
+                });
+            });
+        });
     });
-    
-    it(@"should GET HTML", ^{
-        NSString *downloadScript = @"var responseString; request.get('http://www.apple.com').then(function(response) { responseString = response; }, null);";
-        [context evaluateScript:downloadScript];
+});
 
-        [[expectFutureValue(context[@"responseString"]) shouldEventually] beNonNil];
-        [[expectFutureValue(theValue([context[@"responseString"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
-        [[expectFutureValue([context[@"responseString"] toString]) shouldEventually] haveLengthOfAtLeast:1];
+describe(@"headersFromURLValue:", ^{
+    let(context, ^id{
+        return [RPJSContext new];
     });
-    
-    it(@"should POST JSON", ^{
-        NSString *downloadScript = @"var json; request.post('http://httpbin.org/post', { 'text': 'example text' }).then(function(response) { json = response; }, null);";
-        [context evaluateScript:downloadScript];
 
-        [[expectFutureValue(context[@"json"]) shouldEventually] beNonNil];
-        [[expectFutureValue(theValue([context[@"json"] isUndefined])) shouldEventuallyBeforeTimingOutAfter(5.0)] beNo];
-        [[expectFutureValue([context[@"json"] toString]) shouldEventually] haveLengthOfAtLeast:1];
+    describe(@"nil argument", ^{
+        let(urlValue, ^id{
+            return nil;
+        });
+
+        specify(^{
+            [[[RPJSRequest headersFromURLValue:urlValue] should] equal:@{}];
+        });
+    });
+
+    describe(@"String argument", ^{
+        let(urlValue, ^id{
+            return [JSValue valueWithObject:@"http://httpbin.org" inContext:context];
+        });
+
+        specify(^{
+            [[[RPJSRequest headersFromURLValue:urlValue] should] equal:@{}];
+        });
+    });
+
+    describe(@"Object argument", ^{
+        describe(@"with valid headers property", ^{
+            let(acceptHeader, ^id{
+                return @{ @"Accept": @"text/html" };
+            });
+            let(urlValue, ^id{
+                return [JSValue valueWithObject:@{ @"url": @"http://httpbin.org", @"headers": acceptHeader } inContext:context];
+            });
+
+            specify(^{
+                [[[RPJSRequest headersFromURLValue:urlValue] should] equal:acceptHeader];
+            });
+        });
+
+        describe(@"without headers property", ^{
+            let(urlValue, ^id{
+                return [JSValue valueWithObject:@{ @"url": @"http://httpbin.org" } inContext:context];
+            });
+
+            specify(^{
+                [[[RPJSRequest headersFromURLValue:urlValue] should] equal:@{}];
+            });
+        });
+
+        describe(@"with null headers property", ^{
+            let(urlValue, ^id{
+                return [JSValue valueWithObject:@{ @"headers": [NSNull null] } inContext:context];
+            });
+
+            specify(^{
+                [[[RPJSRequest headersFromURLValue:urlValue] should] equal:@{}];
+            });
+        });
     });
 });
 
