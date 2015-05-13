@@ -21,8 +21,8 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Kiwi (2.3.1)
-  - RPJSContext (2.1.1):
-    - AFNetworking (~> 2.2)
+  - RPJSContext (2.2):
+    - AFNetworking (~> 2.5)
 
 DEPENDENCIES:
   - Kiwi
@@ -35,6 +35,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   Kiwi: f038a6c61f7a9e4d7766bff5717aa3b3fdb75f55
-  RPJSContext: 826e8e3e90e8d1af5a2969ff9512989d8ff56f82
+  RPJSContext: 44fc572f9308bfe97d0b568b44ce1bea91a87370
 
 COCOAPODS: 0.35.0

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "RPJSContext"
-  s.version          = "2.2"
+  s.version          = "2.2.1"
   s.summary          = "JSContext++"
   s.homepage         = "http://github.com/RobotsAndPencils/RPJSContext"
   s.license          = 'MIT'
@@ -19,5 +19,5 @@ Pod::Spec.new do |s|
   s.osx.exclude_files = 'Classes/ios'
   s.public_header_files = 'Classes/**/*.h'
   s.frameworks = 'JavaScriptCore'
-  s.dependency 'AFNetworking', '~>2.2'
+  s.dependency 'AFNetworking', '~>2.5'
 end
