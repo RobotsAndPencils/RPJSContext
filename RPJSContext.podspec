@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "RPJSContext"
-  s.version          = "2.1.1"
+  s.version          = "2.2"
   s.summary          = "JSContext++"
   s.homepage         = "http://github.com/RobotsAndPencils/RPJSContext"
   s.license          = 'MIT'
